@@ -79,7 +79,7 @@ export default {
     seek() {
       if(this.search)
       {
-          this.$router.push({ path: "/list", query: { search: this.search } });
+          this.$router.push({ path: "/list", query: { articleTitle: this.search } });
           this.search=""
       }
     }

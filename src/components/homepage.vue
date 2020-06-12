@@ -11,7 +11,8 @@
             <router-link
               v-for="(item,index) in  Labellist"
               :key="item._id"
-              :to="{path:'/article/findByCategory',query:{articleCategory:item.value}}"
+              :to="{path:'/list',query:{articleCategory:item.value}}"
+               
               :class="'cor'+index%9"
               exact-active-class="Label"
             >{{item.name}}</router-link>
@@ -24,7 +25,7 @@
               <router-link
                 class="series-a"
                 exact-active-class="series"
-                :to="{path:'/list',query:{seriesid:item.value}}"
+                :to="{path:'/list',query:{articleColumn:item.value}}"
               >
                 <i class="iconfont">&#xe644;</i>
                 &ensp;{{item.name}}

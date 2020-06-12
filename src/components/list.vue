@@ -8,11 +8,11 @@
         :key="item._id"
         class="post-content"
       >
-        <img class="picture" :src="item.image" />
+        <img class="picture" :src="imageURL(item)" />
         <div class="cont">
           <p>
             <!-- <em class="recommend" v-if="item.istop==='1'">置顶</em>
-            <em class="tuijian" v-if="item.istop==='0'">推荐</em> -->
+            <em class="tuijian" v-if="item.istop==='0'">推荐</em>-->
             <span class="content-title">{{item.articleTitle}}</span>
           </p>
           <div class="content" v-html="item.articleContent"></div>
@@ -24,7 +24,7 @@
           <!-- <span class="tag right ipad" v-if="false">
             <span>浏览({{item.visits}})</span>
             <span>留言({{item.comment}})</span>
-          </span> -->
+          </span>-->
         </div>
       </router-link>
       <!-- <div class="pagepagin-list">
@@ -56,7 +56,7 @@
             </a>
           </span>
         </div>
-      </div> -->
+      </div>-->
     </div>
   </div>
 </template>
@@ -74,12 +74,24 @@ export default {
       gengduo: false
     };
   },
+  computed: {
+    imageURL() {
+      return item => {
+        return window.imageURL + item.imageInfo.url;
+      };
+    }
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.getallarticlelist(to.query);
+    next();
+  },
   methods: {
     // get获取所有文章列表
-    getallarticlelist() {
+    getallarticlelist(data) {
       this.$axios({
         method: "GET",
-        url: "article/findAll"
+        url: "article/findAll",
+        params: data?data:{}
       }).then(
         res => {
           const data = res.data.result;
@@ -130,17 +142,11 @@ export default {
       );
     },
     //点击【更多】获取相应的特定属性文章文章
-    more() {
-     
-    },
+    more() {},
     //点击【首页】获取相应的特定属性文章文章
-    first() {
-      
-    },
+    first() {},
     //点击【尾页】获取相应的特定属性文章文章
-    end() {
-      
-    },
+    end() {},
     //点击某一页获取相应的特定属性文章文章
     getthispagearticlelist(thispage) {
       this.thispage = thispage;
@@ -165,8 +171,7 @@ export default {
   },
   //监听
   watch: {
-    $route(to, from) {
-    }
+    $route(to, from) {}
   }
 };
 </script>

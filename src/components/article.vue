@@ -63,6 +63,7 @@ export default {
           //   }
           // }
           this.article = res.data.result.articleContent;
+          this.src =window.imageURL+ res.data.result.imageInfo.url
         },
         err => {
           console.log(err);
