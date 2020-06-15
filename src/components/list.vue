@@ -20,7 +20,7 @@
         <div class="post-content-footer">
           <span class="tag tag-time">{{item.date | dataFormat}}</span>
           <!-- v-for="(label,index) in item.label" :key="index" -->
-          <span class="post-tag">{{item.articleCategory}}</span>
+          <span class="post-tag">{{category(item.articleCategory)}}</span>
           <!-- <span class="tag right ipad" v-if="false">
             <span>浏览({{item.visits}})</span>
             <span>留言({{item.comment}})</span>
@@ -71,7 +71,8 @@ export default {
       pagelist: [],
       articlelist: [],
       thispage: "",
-      gengduo: false
+      gengduo: false,
+      Categories: []
     };
   },
   computed: {
@@ -86,12 +87,21 @@ export default {
     next();
   },
   methods: {
+    category(value) {
+      const a = this.Categories.find(ins => {
+        return ins.value == value;
+      });
+      if (a) {
+        return a.name;
+      }
+      return "";
+    },
     // get获取所有文章列表
     getallarticlelist(data) {
       this.$axios({
         method: "GET",
         url: "article/findAll",
-        params: data?data:{}
+        params: data ? data : {}
       }).then(
         res => {
           const data = res.data.result;
@@ -103,54 +113,12 @@ export default {
       );
     },
     // get获取【标签】文章列表
-    getLabelarticlelist() {
-      this.$axios({
+    async getLabelarticlelist() {
+      const res = await this.$axios({
         method: "get",
         url: "/category/findAllCategory"
-      }).then(
-        res => {
-          console.log("标签", res);
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    },
-    // get获取【专栏】文章列表
-    getseriesarticlelist() {
-      this.$axios({
-        method: "post",
-        url: "/json/article/pageQuery",
-        data: this.qs.stringify({
-          columnid: this.seriesid
-        })
-      }).then(
-        res => {
-          //分割字符串
-          let arr = Object.entries(res.data.data);
-          for (var i = 0; i <= arr.length - 1; i++) {
-            res.data.data[i].label = res.data.data[i].label.split(",");
-            res.data.data[i].label = res.data.data[i].label.slice(0, 3);
-          }
-          this.articlelist = res.data.data;
-          this.pagenum = res.data.total;
-          // this.getpagelist();
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    },
-    //点击【更多】获取相应的特定属性文章文章
-    more() {},
-    //点击【首页】获取相应的特定属性文章文章
-    first() {},
-    //点击【尾页】获取相应的特定属性文章文章
-    end() {},
-    //点击某一页获取相应的特定属性文章文章
-    getthispagearticlelist(thispage) {
-      this.thispage = thispage;
-      this.getpagearticlelist(thispage);
+      });
+      this.Categories = res.data.result;
     },
     // 回到顶部方法，加计时器是为了过渡顺滑
     backTop() {
@@ -222,7 +190,8 @@ p {
 }
 .content {
   font-size: 14px;
-  height: 80px;
+  height: 85px;
+  overflow: hidden;
 }
 .recommend {
   margin-left: 10px;
